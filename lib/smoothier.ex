@@ -1,0 +1,2 @@
+defmodule Smoothier do
+end
