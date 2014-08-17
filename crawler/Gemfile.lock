@@ -12,6 +12,7 @@ GEM
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
       slop (~> 3.4)
+    rake (10.3.2)
     redis (3.1.0)
     slop (3.6.0)
 
@@ -21,4 +22,5 @@ PLATFORMS
 DEPENDENCIES
   httparty
   pry
+  rake
   redis

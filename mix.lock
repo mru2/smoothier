@@ -1,6 +1,10 @@
-%{"eredis": {:git, "git://github.com/wooga/eredis.git", "471dd471060daa1d98391cb69ae006f8ba79a042", [ref: "471dd"]},
+%{"cowboy": {:package, "1.0.0"},
+  "cowlib": {:git, "git://github.com/extend/cowlib.git", "d544a494af4dbc810fc9c15eaf5cc050cced1501", [ref: "1.0.0"]},
+  "eredis": {:git, "git://github.com/wooga/eredis.git", "471dd471060daa1d98391cb69ae006f8ba79a042", [ref: "471dd"]},
   "exredis": {:git, "https://github.com/artemeff/exredis.git", "2bc9948e2c9e6ede2fde64665613766a33b06226", []},
   "httpotion": {:package, "0.2.4"},
   "ibrowse": {:git, "git://github.com/cmullaparthi/ibrowse.git", "7871e2ebe8811efb64e1917e2de455fa87e8dfe3", [tag: "v4.1.0"]},
   "jsex": {:package, "2.0.0"},
-  "jsx": {:package, "2.0.4"}}
+  "jsx": {:package, "2.0.4"},
+  "plug": {:package, "0.5.1"},
+  "ranch": {:git, "git://github.com/extend/ranch.git", "adf1822defc2b7cfdc7aca112adabfa1d614043c", [ref: "1.0.0"]}}

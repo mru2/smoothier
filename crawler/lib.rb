@@ -10,6 +10,10 @@ def read(name)
   JSON.parse ( File.open("../data/#{name}.json", "r").read )
 end
 
+def stored?(name)
+  File.exist? "../data/#{name}.json"
+end
+
 def store(name, value)
   puts "Storing #{name}"
   File.open("../data/#{name}.json", "w") do |f|
@@ -36,36 +40,17 @@ def track_ids(user_id)
   get("/users/#{user_id}/favorites", :limit => 200).map{|t|t['id']}  
 end
 
-# Get my tracks
-my_tracks = track_ids(ME)
-store :my_tracks, my_tracks
+def update_user!(user_id, force = false)
+  return if !force && stored?("user_#{user_id}")
 
-# Get the users who liked them
-users = {}
-my_tracks.each do |track_id|
+  begin 
+    user_details = get("/users/#{user_id}")
+    total_likes = user_details["public_favorites_count"]
+    likes = track_ids(user_id)
 
-  # Get the likers
-  likers = get("/tracks/#{track_id}/favoriters", :limit => 200).map{|u|u['id']}
-
-  # Push them in the local store
-  likers.each do |user_id|
-    users[user_id] ||= 0
-    users[user_id] += 1
+    store "user_#{user_id}", { :total => total_likes, :tracks => likes }
+  rescue => e
+    puts "Error fetching user : #{e.message}"
   end
-
 end
 
-# Get the potential users
-potential_users = users.reject{|k,v|v == 1}.keys
-store :potential_users, potential_users
-
-# Get their data
-rated_users = {}
-
-potential_users.each do |user_id|
-  user_details = get("/users/#{user_id}")
-  total_likes = user_details["public_favorites_count"]
-  likes = track_ids(user_id)
-
-  store "user_#{user_id}", { :total => total_likes, :tracks => likes }
-end

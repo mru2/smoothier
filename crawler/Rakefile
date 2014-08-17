@@ -1,0 +1,61 @@
+require './lib.rb'
+
+task :get_my_tracks do
+  my_tracks = track_ids(ME)
+  store :my_tracks, my_tracks  
+end
+
+task :get_all_users do
+
+  my_tracks = read :my_tracks
+
+  # Get the users who liked them
+  users = {}
+  my_tracks.each do |track_id|
+
+    begin
+      # Get the likers
+      likers = get("/tracks/#{track_id}/favoriters", :limit => 200).map{|u|u['id']}
+
+      # Push them in the local store
+      likers.each do |user_id|
+        users[user_id] ||= 0
+        users[user_id] += 1
+      end
+    rescue => e
+      puts "Error fetchin track #{track_id}"
+    end
+
+  end
+
+  puts "Updating all likers"
+  all_users = users.reject{|k,v|v == 1}.to_a.sort_by(&:last).reverse.map(&:first)
+  store :user_all, all_users
+
+end
+
+task :run do
+  all_users = read :user_all
+  update_users! all_users
+end
+
+task :get_likers do
+  raise "No track id" unless track_id = ENV['TRACK_ID']
+
+  puts "Updating likers for #{track_id}"
+  likers = get("/tracks/#{track_id}/favoriters", :limit => 200).map{|u|u['id']}
+  store :"users_#{track_id}", likers
+
+  update_users! likers
+end
+
+def update_users!(likers)
+  count = likers.count
+  likers.each_with_index do |user_id, index|
+    puts "Updating user #{index + 1}/#{count} - #{user_id}"
+    update_user! user_id
+  end
+end
+
+
+
