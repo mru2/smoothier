@@ -6,6 +6,8 @@ defmodule Smoothier do
   def start(_type, _args) do
     IO.puts "Starting smoothier..."
 
+    {:ok, _pid} = Smoothier.API.start
+
     {:ok, self}
   end
 
@@ -16,7 +18,7 @@ defmodule Smoothier do
     tracks = Algo.top_tracks(scoring, track_id)
 
     tracks |> Enum.take(20) |> Enum.each(fn track -> 
-      IO.puts "#{track.id} [#{track.stats.count}] - #{track.score}"
+      IO.puts "#{track.id} [#{track.stats.count} | #{track.stats.mean}] - #{track.score}"
     end)
     
   end

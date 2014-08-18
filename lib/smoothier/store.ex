@@ -16,7 +16,7 @@ defmodule Smoothier.Store do
   end
 
   def users_for(track_id) do
-    read("user_#{track_id}") |> elem(1)
+    read("users_#{track_id}") |> elem(1)
   end
 
   defp read(file) do
