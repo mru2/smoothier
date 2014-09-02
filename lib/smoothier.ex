@@ -2,10 +2,17 @@ defmodule Smoothier do
   use Application
 
   alias Smoothier.Algo
+  alias Smoothier.Store
 
   def start(_type, _args) do
-    IO.puts "Starting smoothier..."
 
+    IO.puts "Starting the redis server"
+    { :ok, pid } = Exredis.start_link
+    Process.register pid, Redis
+
+    # TODO : start the crawler
+
+    IO.puts "Starting the API..."
     {:ok, _pid} = Smoothier.API.start
 
     {:ok, self}
